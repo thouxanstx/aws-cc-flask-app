@@ -1,0 +1,8 @@
+{% extends 'uploadCompleteLayout.html' %}
+{% block sub %}
+    {% if beerStatus %}
+        <h1 id="output">{{beerStatus}}</h1>
+    {% else %}
+        <h1 id="output"> Something went wrong!</h1>
+    {% endif %}
+{% endblock %}

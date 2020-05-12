@@ -1,0 +1,11 @@
+ {% extends 'layout.html' %}
+{% block content %}
+    <div class="col-md-8"  id='upload-form' style= "margin:auto">
+        <h1 id="upload-title"> To Beer or Not to Beer ? </h1>
+        <h1 id="upload-title">Upload Image</h1>
+        <form id='upload-img' action="{{url_for('complete') }}" method="POST" enctype="multipart/form-data">
+            <input type='file' id='choose-file' name='file' accept="image/*"/>
+            <input type='submit' id='upload-file' value='Upload'/>
+        </form>
+    </div>
+{% endblock %}

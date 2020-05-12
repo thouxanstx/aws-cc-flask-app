@@ -1,0 +1,15 @@
+{% extends 'layout.html' %}
+{% block content %}
+    {% if imUp %}
+        <div class="container", id=upload-form >
+            {%if image_name %}
+                <img src="{{ url_for('static', filename = 'upload/' + image_name) }}" class="image-upload">
+                {% block sub %} {% endblock %}
+            {% else %}
+                <h1 id='output'> Something went wrong</h1>
+            {% endif %}
+        </div>
+    {% else %}
+        <h1 id='output'> No file uploaded</h1>
+    {% endif %}
+{% endblock %}

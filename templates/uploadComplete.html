@@ -1,0 +1,6 @@
+{% extends 'uploadCompleteLayout.html' %}
+{% block sub %}
+    <form id ='get-prediction' action="{{url_for('predictComplete') }}" method="POST" enctype="multipart/form-data">
+        <input type='submit' id='predict-file' value='Predict'/>
+    </form>
+{% endblock %}

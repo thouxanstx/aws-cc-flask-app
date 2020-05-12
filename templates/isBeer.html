@@ -1,0 +1,10 @@
+{% extends 'layout.html' %}
+{% block content %}
+    {% for beer in beers %}  
+        <div class="content-section">
+          <div class="media-body">
+            <img src="data:;base64,{{ beer }}"/>
+          </div>
+        </div>
+    {% endfor %}
+{% endblock %}
