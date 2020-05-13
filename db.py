@@ -14,13 +14,13 @@ def convertToBinaryData(filename):
 def insertImage(image, status):
     try:
         connection = mysql.connector.connect(host='localhost',
-                                             database='arn:aws:rds:us-east-1:559888591752:db:flask-db',
+                                             database='beerdb',
                                              user='root',
                                              password='uwebUham_3')
         cursor = connection.cursor()
-        insert_query = ''' INSERT INTO images (image, status) VALUES (%s,%s)'''
-        img = convertToBinaryData(image)
-        insert_tuple = (img, status)
+        insert_query = ''' INSERT INTO images (path, status) VALUES (%s,%s)'''
+        #img = convertToBinaryData(image)
+        insert_tuple = (image, status)
         cursor.execute(insert_query, insert_tuple)
         connection.commit()
     except Error as er:
@@ -35,7 +35,7 @@ def readImage(status):
     images = []
     try:
         connection = pymysql.connect(host='localhost',
-                                             database='arn:aws:rds:us-east-1:559888591752:db:flask-db',
+                                             database='beerdb',
                                              user='root',
                                              password='uwebUham_3')        
         with connection.cursor() as cursor:            
@@ -43,7 +43,7 @@ def readImage(status):
             cursor.execute(fetch_query, (status,))
             record = cursor.fetchall()
             for row in record:
-                img = row[0]
+                img = row[1]
                 images.append(img)                
     except Error as er:
         print(er)        

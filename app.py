@@ -4,12 +4,13 @@ from predict import getImg, getBeer
 from db import readImage, insertImage
 from base64 import b64encode
 import os
+import shutil
 
 app = Flask(__name__)
-APP_ROOT = os.path.dirname(os.path.realpath('__file__'))
+#APP_ROOT = os.path.dirname(os.path.realpath('__file__'))
 
 def load_image(filename):
-    target = os.path.join(APP_ROOT, 'upload/')
+    target = os.path.join('./', 'upload/')
     dest = '/'.join([target, filename])
     print(dest)
 
@@ -20,25 +21,17 @@ def home():
 
 @app.route('/isBeer')
 def isBeer():
-    beers = []
-    images = readImage('beer')
-    for img in images:    
-        image = b64encode(img).decode('utf-8')
-        beers.append(image)
+    beers = readImage('beer')
     return render_template('isBeer.html', title = 'To Beer', beers = beers)
 
 @app.route('/isNotBeer')
 def isNotBeer():
-    not_beers = []
-    images = readImage('not beer')
-    for img in images:    
-        image = b64encode(img).decode('utf-8')
-        not_beers.append(image)
+    not_beers = readImage('not beer')
     return render_template('isNotBeer.html',title = 'Not To Beer', not_beers = not_beers)
 
 @app.route('/complete', methods=['GET', 'POST'])
 def complete():
-    target = os.path.join(APP_ROOT, 'static/upload/')
+    target = os.path.join('./', 'static/upload/')
     if not os.path.isdir(target):
         os.mkdir(target)
     try:
@@ -53,20 +46,25 @@ def complete():
 
 @app.route('/predictComplete', methods=['GET', 'POST'])
 def predictComplete():
-    target = os.path.join(APP_ROOT, 'static/upload/')
-    try:
-        for file in os.listdir(target):
-            dest = '/'.join([target, file])
-            response = getImg(dest)
-            beer = getBeer(response)
-            imUp = True
-            if beer == 'This is beer :)':
-                insertImage(dest, 'beer')
-            elif beer == 'This is not beer :(':
-                insertImage(dest, 'not beer')                
-        os.remove(dest)
-    except:
-        imUp = False
+    target = os.path.join('./', 'static/upload/')
+    beerDir = os.path.join('./', 'static/beer/')
+    notBeerDir = os.path.join('./', 'static/notBeer/')
+    for file in os.listdir(target):
+        dest = '/'.join([target, file])
+        beerDest = '/'.join([beerDir, file])
+        notBeerDest = '/'.join([notBeerDir, file])
+        response = getImg(dest)
+        beer = getBeer(response)
+        print(beer)
+        imUp = True
+        if beer == 'This is beer :)':
+            shutil.move(dest, beerDest)
+            insertImage(beerDir + file, 'beer')
+        elif beer == 'This is not beer :(':
+            shutil.move(dest, notBeerDest)
+            insertImage(notBeerDir + file, 'not beer')               
+    #os.remove(dest)
+
     return render_template('predictComplete.html', image_name = file, imUp = imUp, beerStatus = beer)
 
 if __name__ == '__main__':
